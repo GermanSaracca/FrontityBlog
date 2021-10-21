@@ -8,7 +8,7 @@ import List from './List'
 import Post from './Post'
 import Page from './Page'
 
-const Root = ({ state }) => {
+const Root = ({ state, actions }) => {
   const data = state.source.get(state.router.link)
 
   return (
@@ -33,10 +33,19 @@ const Root = ({ state }) => {
       />
       <Header isPostType={data.isPostType} isPage={data.isPage}>
         <h1>Frontity Blog</h1>
-        <p>Current URL: {state.router.link}</p>
+        {state.theme.isUrlVisible ? (
+          <>
+            Current URL: {state.router.link}{' '}
+            <Button onClick={actions.theme.toggleUrl}>&#x3c; Hide URL</Button>
+          </>
+        ) : (
+          <Button onClick={actions.theme.toggleUrl}>Show URL &#x3e;</Button>
+        )}
         <nav>
           <Link link="/">Home</Link>
-          <Link link="/about-us">Nosotros</Link>
+          <Link link="/about-us">About us</Link>
+          <Link link="/page/1">More Posts</Link>
+          <Link link="/destinations">Destinations</Link>
         </nav>
       </Header>
       <Main>
@@ -44,6 +53,7 @@ const Root = ({ state }) => {
           <List when={data.isArchive}>This is a list</List>
           <Post when={data.isPost}>This is a post</Post>
           <Page when={data.isPage}>This is a page</Page>
+          <Page when={data.isDestinations}>Destinations page</Page>
         </Switch>
       </Main>
     </>
@@ -98,7 +108,6 @@ const Main = styled.main`
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
-  box-shadow: 0 0 20px 4px #fff;
   border-radius: 20px;
 
   h1,
@@ -137,5 +146,18 @@ const Main = styled.main`
     margin: 2rem 0;
     border: solid 1px #404040;
     border-radius: 5px;
+  }
+`
+const Button = styled.button`
+  background-color: lightseagreen;
+  border: none;
+  color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  transition: 40ms;
+
+  :hover {
+    cursor: pointer;
+    outline: solid 2px #fff;
   }
 `
